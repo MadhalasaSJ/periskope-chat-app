@@ -6,12 +6,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {
-    enabled: false,
-  },
   eslint: {
-    
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, 
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
