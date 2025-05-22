@@ -1,0 +1,63 @@
+.container {
+  position: sticky;
+  bottom: 0;
+  background-color: #f0f0f0;
+  padding: 0.75rem;
+  border-top: 1px solid #ddd;
+  z-index: 10;
+}
+
+.emojiPicker {
+  position: absolute;
+  bottom: 4.5rem;
+  left: 1rem;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.iconBtn {
+  background: transparent;
+  color: #444;
+  font-size: 1.25rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.iconBtn:hover {
+  color: #222;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: transparent;
+}
+
+.sendBtn {
+  background: transparent;
+  border: none;
+  color: #0a84ff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.sendBtn:hover {
+  color: #0066cc;
+}
