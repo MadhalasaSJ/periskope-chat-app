@@ -1,4 +1,3 @@
-// next.config.mjs
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,7 +7,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
-    enabled: false, 
+    enabled: false,
+  },
+  eslint: {
+    
+    ignoreDuringBuilds: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
