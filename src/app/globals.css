@@ -2,28 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Theme Variables */
+/* Global Theme Variables */
 :root {
-  --background: #eae6df; /* WhatsApp light chat background */
-  --foreground: #111b21; /* WhatsApp dark text */
-  --chat-bg: #ffffff;    /* Chat message background */
-  --accent: #00a884;     /* WhatsApp green accent */
+  --background: #f0f2f5;
+  --foreground: #1e1e1e;
+  --chat-bg: #ffffff;
+  --accent: #00a884;
+  --border: #d1d5db;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus: #00a884;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0b141a;
-    --foreground: #e9edef;
+    --background: #0a0a0a;
+    --foreground: #ededed;
     --chat-bg: #202c33;
     --accent: #00a884;
+    --border: #444;
+    --input-bg: #111;
+    --input-border: #444;
+    --input-focus: #00a884;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Global Styles */
+/* Base Styles */
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: system-ui, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Input + Button Styling */
+input,
+textarea,
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  width: 100%;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(0, 168, 132, 0.2);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #029e75;
+}
+
+/* Card/Form Shadow */
+.card {
+  background-color: var(--chat-bg);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: box-shadow 0.2s ease;
 }
 
 /* Scrollbar */
@@ -31,16 +87,34 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #a8b3b8;
+  background: #bbb;
   border-radius: 4px;
 }
 
-/* Chat bubble utility */
+/* Bubble (Chat) */
 .bubble {
   background-color: var(--chat-bg);
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 1.2rem;
   max-width: 75%;
+  box-shadow: var(--shadow);
   margin-bottom: 0.5rem;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/* Animations */
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

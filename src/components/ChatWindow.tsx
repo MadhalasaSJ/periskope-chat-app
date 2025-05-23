@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import {
   FaUserAlt,
@@ -13,19 +13,19 @@ import {
 import MessageInput from "@/components/MessageInput";
 import styles from "@/styles/ChatWindow.module.css";
 
-type Props = {
-  chatId: string | null;
-  chatName?: string | null;
-};
-
-type Message = {
+interface Message {
   id?: string;
   sender: string;
   content: string;
   created_at: string;
   chat_id: string;
   sender_avatar_url?: string | null;
-};
+}
+
+interface Props {
+  chatId: string | null;
+  chatName?: string | null;
+}
 
 const userIcons = [
   FaUserAlt,
@@ -36,7 +36,6 @@ const userIcons = [
   FaUserTie,
 ];
 
-// Memoize the getUserIcon to avoid recalculating on every render
 const getUserIcon = (email: string) => {
   const hash = email
     .split("")
@@ -49,11 +48,8 @@ export default function ChatWindow({ chatId, chatName }: Props) {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [resolvedChatName, setResolvedChatName] = useState<string>("Chat");
   const [chatAvatarUrl, setChatAvatarUrl] = useState<string | null>(null);
-  const [loadingMessages, setLoadingMessages] = useState<boolean>(false);
-  const [errorLoadingMessages, setErrorLoadingMessages] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch chat details (name, avatar)
   useEffect(() => {
     if (chatName && chatId) {
       setResolvedChatName(chatName);
@@ -77,7 +73,6 @@ export default function ChatWindow({ chatId, chatName }: Props) {
     }
   }, [chatId, chatName]);
 
-  // Get current authenticated user email
   useEffect(() => {
     const fetchUser = async () => {
       const {
@@ -89,37 +84,28 @@ export default function ChatWindow({ chatId, chatName }: Props) {
     fetchUser();
   }, []);
 
-  // Scroll to bottom when messages update
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fetch initial messages for the chat
   useEffect(() => {
     if (!chatId) return;
 
     const fetchMessages = async () => {
-      setLoadingMessages(true);
-      setErrorLoadingMessages(null);
       const { data, error } = await supabase
         .from("messages")
         .select("*")
         .eq("chat_id", chatId)
-        .order("created_at", { ascending: true });
+        .order("created_at");
 
-      if (error) {
-        setErrorLoadingMessages(error.message);
-        setMessages([]);
-      } else if (data) {
+      if (!error && data) {
         setMessages(data);
       }
-      setLoadingMessages(false);
     };
 
     fetchMessages();
   }, [chatId]);
 
-  // Realtime subscription for new messages
   useEffect(() => {
     if (!chatId) return;
 
@@ -135,12 +121,8 @@ export default function ChatWindow({ chatId, chatName }: Props) {
         },
         (payload) => {
           const newMessage = payload.new as Message;
-
           setMessages((prev) => {
-            // Avoid duplicates
-            if (prev.find((msg) => msg.id === newMessage.id)) {
-              return prev;
-            }
+            if (prev.find((msg) => msg.id === newMessage.id)) return prev;
             return [...prev, newMessage];
           });
         }
@@ -152,12 +134,10 @@ export default function ChatWindow({ chatId, chatName }: Props) {
     };
   }, [chatId]);
 
-  // Handler for new messages from MessageInput
   const handleLocalMessage = useCallback((msg: Message) => {
     setMessages((prev) => [...prev, msg]);
   }, []);
 
-  // Format time nicely, including showing date if not today
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -186,7 +166,6 @@ export default function ChatWindow({ chatId, chatName }: Props) {
 
   return (
     <div className={styles.chatWindowContainer}>
-      {/* Header */}
       <div className={styles.chatHeader}>
         <div className={styles.chatHeaderLeft}>
           {chatAvatarUrl ? (
@@ -208,15 +187,8 @@ export default function ChatWindow({ chatId, chatName }: Props) {
         </div>
       </div>
 
-      {/* Messages */}
       <div className={styles.messagesList}>
-        {loadingMessages && <p>Loading messages...</p>}
-        {errorLoadingMessages && (
-          <p className={styles.errorText}>Error: {errorLoadingMessages}</p>
-        )}
-        {!loadingMessages && !messages.length && (
-          <p className={styles.noMessagesText}>No messages yet</p>
-        )}
+        {!messages.length && <p className={styles.noMessagesText}>No messages yet</p>}
 
         {messages.map((msg, idx) => {
           const isMe = msg.sender === currentUser;
@@ -227,7 +199,9 @@ export default function ChatWindow({ chatId, chatName }: Props) {
           return (
             <div
               key={msg.id || idx}
-              className={`${styles.messageRow} ${isMe ? styles.me : styles.them}`}
+              className={`${styles.messageRow} ${
+                isMe ? styles.me : styles.them
+              }`}
             >
               {!isMe && (
                 <div className={styles.avatar} title={msg.sender}>
@@ -262,10 +236,9 @@ export default function ChatWindow({ chatId, chatName }: Props) {
             </div>
           );
         })}
-        <div ref={bottomRef} />
+        <div ref={bottomRef} style={{ height: 1 }} />
       </div>
 
-      {/* Input */}
       <MessageInput chatId={chatId} onNewMessage={handleLocalMessage} />
     </div>
   );
