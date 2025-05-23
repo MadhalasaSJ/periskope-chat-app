@@ -22,10 +22,10 @@ A sleek, real-time group chat application built with **Next.js 15**, **Supabase*
 > 📌 **Note:** Login screen looks best in **browser light mode**.
 
 ### 💡 Login Screen (Light Mode Recommended)
-![Login UI Light Mode](./public/demo-login.png) <!-- Replace with your screenshot -->
+![Login UI Light Mode](public/screenshots/Screenshot 2025-05-23 141238.png) 
 
 ### 💬 Group Chat UI
-![Chat UI](./public/demo-chat.png) <!-- Replace with your screenshot -->
+![Chat UI](./public/demo-chat.png) 
 
 
 
