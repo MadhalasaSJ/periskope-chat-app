@@ -33,7 +33,7 @@ A sleek, real-time group chat application built with **Next.js 15**, **Supabase*
 
 - **Clone the repository**
   ```bash
-  git clone https://github.com/your-username/periskope-chat-app.git
+  git clone https://github.com/MadhalasaSJ/periskope-chat-app.git
 - **Navigate to the project directory**
   ```bash
   cd periskope-chat-app
