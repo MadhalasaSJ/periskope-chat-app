@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useTheme } from "next-themes";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -39,52 +41,54 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="flex items-center justify-center h-screen px-4 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 text-gray-900 dark:text-white">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-gray-800 px-4 transition-colors duration-300">
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md bg-white/90 dark:bg-gray-900/90 border border-gray-300 dark:border-gray-700 rounded-2xl shadow-2xl backdrop-blur-lg p-8 space-y-6 animate-fadeIn"
+        className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-8 space-y-6"
       >
-        <div className="text-center space-y-1">
-          <h1 className="text-3xl font-extrabold">Welcome Back 👋</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Please sign in to continue
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Welcome Back 👋
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Sign in to your account
           </p>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              Email address
             </label>
             <input
               type="email"
               id="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="you@example.com"
-              required
-              className="w-full px-4 py-2 mt-1 border rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
               Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none pr-10"
                 placeholder="••••••••"
-                required
-                className="w-full px-4 py-2 mt-1 border rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-3 flex items-center text-gray-600 dark:text-gray-300"
-                onClick={() => setShowPassword((prev) => !prev)}
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
@@ -93,21 +97,28 @@ export default function LoginPage() {
         </div>
 
         {errorMsg && (
-          <div className="text-sm text-red-600 text-center bg-red-50 dark:bg-red-900/20 px-4 py-2 rounded">
+          <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-4 py-2 rounded text-center">
             {errorMsg}
-          </div>
+          </p>
         )}
 
-        <div className="text-right">
-          <a href="#" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+        <div className="flex justify-between items-center text-sm">
+          <a href="#" className="text-blue-600 hover:underline dark:text-blue-400">
             Forgot password?
           </a>
+          <button
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white transition"
+          >
+            Toggle {theme === "dark" ? "Light" : "Dark"} Mode
+          </button>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold py-2 px-4 rounded-lg shadow-lg disabled:opacity-60"
+          className="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-semibold py-2 px-4 rounded-lg shadow disabled:opacity-60"
         >
           {loading ? "Signing In..." : "Sign In"}
         </button>
