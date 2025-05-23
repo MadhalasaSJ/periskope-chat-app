@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🟢 Periskope Chat App
 
-## Getting Started
+A sleek, real-time group chat application built with **Next.js 15**, **Supabase**, and **Tailwind CSS** — featuring secure login, media sharing, presence indicators, and responsive design inspired by modern messaging apps.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔐 Supabase Auth for user login (email/password)
+- 💬 Real-time messaging with Supabase Realtime
+- 🖼 Upload & send images/videos (Supabase Storage)
+- 🧑‍🤝‍🧑 Group presence UI with avatars
+- 📱 Responsive design for mobile and desktop
+- 🌗 Light & dark UI support
+- 🧠 Intelligent timestamp formatting
+- ✅ Shows sender identity and profile icon
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📸 Screenshots
 
-## Learn More
+> 📌 **Note:** Login screen looks best in **browser light mode**.
 
-To learn more about Next.js, take a look at the following resources:
+### 💡 Login Screen (Light Mode Recommended)
+![Login UI Light Mode](./public/demo-login.png) <!-- Replace with your screenshot -->
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 💬 Group Chat UI
+![Chat UI](./public/demo-chat.png) <!-- Replace with your screenshot -->
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧑‍💻 Local Development Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Clone the repository**
+  ```bash
+  git clone https://github.com/your-username/periskope-chat-app.git
+- **Navigate to the project directory**
+  ```bash
+  cd periskope-chat-app
+- **Install dependencies**
+  ```bash
+  npm install
+- **Create a .env.local file in the root of the project and add your Supabase credentials**
+  ```bash
+  NEXT_PUBLIC_SUPABASE_URL=your-project-url
+  NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+- **Start the development server**
+  ```bash
+  npm run dev
+- Your app should now be running at http://localhost:3000 🚀
+---
+## 🗃 Supabase Setup Guide
+
+### 📦 Tables
+
+#### `chats`
+
+| Column       | Type   | Description           |
+|--------------|--------|-----------------------|
+| `id`         | UUID   | Primary key           |
+| `name`       | string | Chat/group name       |
+| `avatar_url` | string | (Optional) Avatar URL |
+
+#### `messages`
+
+| Column       | Type      | Description                              |
+|--------------|-----------|------------------------------------------|
+| `id`         | UUID      | Primary key                              |
+| `chat_id`    | UUID      | Foreign key referencing `chats` table     |
+| `sender`     | string    | Email of the sender                      |
+| `content`    | text      | Message content or media URL             |
+| `created_at` | timestamp | Timestamp of the message                 |
+
+
+
+## 🗃 Supabase Setup Guide
+
+### 📦 Tables
+
+#### `chats`
+
+| Column       | Type   | Description           |
+|--------------|--------|-----------------------|
+| `id`         | UUID   | Primary key           |
+| `name`       | string | Chat/group name       |
+| `avatar_url` | string | (Optional) Avatar URL |
+
+#### `messages`
+
+| Column       | Type      | Description                              |
+|--------------|-----------|------------------------------------------|
+| `id`         | UUID      | Primary key                              |
+| `chat_id`    | UUID      | Foreign key referencing `chats` table     |
+| `sender`     | string    | Email of the sender                      |
+| `content`    | text      | Message content or media URL             |
+| `created_at` | timestamp | Timestamp of the message                 |
+
+---
+
+### 📂 Storage
+
+- **Bucket Name**: `attachments`
+- **Access**: `public`
+- **Usage**: Used for uploading images and videos via the `MessageInput` component.
+
+---
+
+### 🔐 Auth
+
+- **Enabled Method**: `Email/Password`
+- **Steps**:
+  1. Go to Supabase Dashboard
+  2. Navigate to **Authentication → Email**
+  3. Enable **Email sign-in**
+---
+
+### 🌐 Deployment
+
+- **Deployed using **Vercel**.**
+  ```bash
+  # To deploy the project
+  vercel deploy
+
+---
+
+### 🛠 Tips
+
+- If images or videos don't show:
+
+  --- Ensure the attachments bucket exists in Supabase Storage
+  
+  --- Set bucket access to public
+  
+  --- Confirm the uploaded file URLs are valid
+  
+  --- For best login screen appearance, view the app in light mode (browser theme)
+     
+
+
