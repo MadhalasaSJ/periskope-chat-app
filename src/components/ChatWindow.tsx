@@ -242,7 +242,7 @@ export default function ChatWindow({ chatId, chatName }: Props) {
         <div ref={bottomRef} />
       </div>
 
-      {/* ✅ removed `onNewMessage` prop */}
+     
       <MessageInput chatId={chatId} />
     </div>
   );
