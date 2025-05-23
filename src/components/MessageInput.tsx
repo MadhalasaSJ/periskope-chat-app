@@ -8,15 +8,9 @@ import styles from "@/styles/MessageInput.module.css";
 
 type Props = {
   chatId: string | null;
-  onNewMessage?: (msg: {
-    chat_id: string;
-    sender: string;
-    content: string;
-    created_at: string;
-  }) => void;
 };
 
-export default function MessageInput({ chatId }: Props) {  // removed onNewMessage from props
+export default function MessageInput({ chatId }: Props) {
   const [message, setMessage] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -58,8 +52,7 @@ export default function MessageInput({ chatId }: Props) {  // removed onNewMessa
     if (error) {
       console.error("Failed to send message:", error.message);
     } else {
-      setMessage(""); // clear input on success
-      // Removed: onNewMessage?.(newMessage);
+      setMessage("");
     }
   };
 
@@ -83,11 +76,12 @@ export default function MessageInput({ chatId }: Props) {  // removed onNewMessa
       return;
     }
 
-    const { data } = supabase.storage
+    const { data: urlData } = supabase.storage
       .from("attachments")
       .getPublicUrl(filePath);
 
-    if (!data?.publicUrl) {
+    const publicUrl = urlData?.publicUrl;
+    if (!publicUrl) {
       console.error("Could not get public URL for the uploaded file");
       return;
     }
@@ -95,15 +89,18 @@ export default function MessageInput({ chatId }: Props) {  // removed onNewMessa
     const newMessage = {
       chat_id: chatId,
       sender: user.email,
-      content: data.publicUrl,
+      content: publicUrl,
       created_at: new Date().toISOString(),
     };
 
-    const { error: insertErr } = await supabase.from("messages").insert(newMessage);
+    const { error: insertErr } = await supabase
+      .from("messages")
+      .insert(newMessage);
     if (insertErr) {
       console.error("Insert message error:", insertErr.message);
     }
-    // Removed: onNewMessage?.(newMessage);
+
+    setMessage("");
   };
 
   const handleEmojiClick = (emojiData: any) => {
@@ -143,6 +140,7 @@ export default function MessageInput({ chatId }: Props) {  // removed onNewMessa
           type="file"
           ref={fileInputRef}
           className="hidden"
+          accept="image/*,video/*"
           onChange={handleFileUpload}
         />
 
